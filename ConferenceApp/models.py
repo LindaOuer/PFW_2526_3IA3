@@ -1,5 +1,6 @@
 from django.db import models
 from UserApp.models import User
+from django.core.validators import MinLengthValidator, FileExtensionValidator
 
 # Create your models here.
 class Conference(models.Model):
@@ -15,7 +16,7 @@ class Conference(models.Model):
     location = models.CharField(max_length=200)
     start_date = models.DateField()
     end_date = models.DateField()
-    description = models.TextField()
+    description = models.TextField(validators=[MinLengthValidator(30, "Description must be at least 30 characters long.")])
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -38,7 +39,7 @@ class Submission(models.Model):
     title = models.CharField(max_length=200)
     abstract = models.TextField()
     keywords = models.TextField()
-    paper = models.FileField(upload_to="papers/")
+    paper = models.FileField(upload_to="papers/", validators=[FileExtensionValidator(allowed_extensions=["pdf"])])
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="pending")
     submission_date = models.DateField(auto_now_add=True)
     payed = models.BooleanField(default=False)
