@@ -1,6 +1,7 @@
 from django.db import models
 from UserApp.models import User
 from django.core.validators import MinLengthValidator, FileExtensionValidator
+from django.core.exceptions import ValidationError
 
 # Create your models here.
 class Conference(models.Model):
@@ -20,6 +21,12 @@ class Conference(models.Model):
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self) -> str:
+        return f"{self.name}"
+    def clean(self):
+        if self.end_date < self.start_date:
+            raise ValidationError("End date cannot be earlier than start date.")
     
 class OrganizingCommittee (models.Model):
     conference = models.ForeignKey(Conference, on_delete=models.CASCADE, related_name='committees')
