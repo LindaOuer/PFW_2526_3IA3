@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <!-- Utilisateur connecté -->
+        <div class="text-center my-5">
+            <h1 class="display-5 mb-4 text-primary">
+                <i class="fa fa-user-circle me-2"></i> Bienvenue, {{ user.username }} !
+            </h1>
+            <p class="lead fs-4 text-muted">Explorez et gérez les conférences avec style !</p>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-5">
+                        <h2 class="card-title text-center mb-4 text-primary">
+                            Vous êtes connecté en tant que <strong>{{ user.get_full_name|default:user.username }}</strong>
+                        </h2>
+                        <hr class="my-4">
+                        <p class="card-text fs-5 text-center">
+                            Utilisez la navbar pour naviguer vers les conférences ou gérer les vôtres.
+                        </p>
+                        <div class="text-center mt-4">
+                            <a href="{% url 'conference-listLV' %}" class="btn btn-primary btn-lg px-5 py-3 me-3">
+                                <i class="fa fa-calendar-alt me-2"></i> Voir les Conférences
+                            </a>
+                            {% if user.is_staff %}
+                                <a href="{% url 'admin:index' %}" class="btn btn-warning btn-lg px-5 py-3">
+                                    <i class="fa fa-tachometer-alt me-2"></i> Dashboard Admin
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if user.is_staff %}
+            <div class="alert alert-info text-center mt-5 shadow-sm">
+                <i class="fa fa-crown me-2"></i>
+                <strong>Mode Admin Activé :</strong> Vous avez des privilèges étendus.
+            </div>
+        {% endif %}
+
+    {% else %}
+        <!-- Utilisateur non connecté -->
+        <div class="text-center my-5">
+            <h1 class="display-5 mb-4 text-primary">
+                <i class="fa fa-globe me-2"></i> Bienvenue sur Ma Conf App
+            </h1>
+            <p class="lead fs-4 text-muted">La plateforme de gestion de conférences scientifiques.</p>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h3 class="mb-0">
+                            <i class="fa fa-info-circle me-2"></i> Découvrez nos conférences
+                        </h3>
+                    </div>
+                    <div class="card-body p-5 text-center">
+                        <p class="card-text fs-5">
+                            Parcourez les événements à venir, même sans compte !<br>
+                            Connectez-vous pour gérer vos inscriptions ou créer des conférences.
+                        </p>
+                        <div class="mt-4">
+                            <a href="{% url 'conference-listLV' %}" class="btn btn-primary btn-lg px-5 py-3 me-3">
+                                <i class="fa fa-calendar-alt me-2"></i> Voir les Conférences
+                            </a>
+                            <a href="{% url 'login' %}" class="btn btn-success btn-lg px-5 py-3 me-3">
+                                <i class="fa fa-sign-in me-2"></i> Se Connecter
+                            </a>
+                            <a href="{% url 'inscription' %}" class="btn btn-outline-secondary btn-lg px-5 py-3 mt-3">
+                                <i class="fa fa-user-plus me-2"></i> S'inscrire
+                            </a> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-5">
+            <p class="text-muted fs-5">
+                <i class="fa fa-lightbulb-o me-2"></i>
+                Astuce : Créez un compte pour sauvegarder vos conférences préférées !
+            </p>
+        </div>
+    {% endif %}
+{% endblock %}

@@ -23,7 +23,7 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
   </head>
-  <body>
+  <body  class="d-flex flex-column min-vh-100" >
     <!-- Barre de navigation unique -->
     <nav
       class="navbar sticky-top navbar-expand-lg navbar-light navbar-icon-top"
@@ -53,7 +53,7 @@
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'conference_list_view' %}"
+              <a class="nav-link" href="{% url 'conference-listLV' %}"
                 ><i class="fa fa-calendar"></i> Conférences</a
               >
             </li>
@@ -86,7 +86,9 @@
             </form>
             {% if user.is_authenticated %}
             <li class="nav-item">
-              <span class="nav-link"><i class="fa fa-user-circle"></i> {{ user.username }} <br> {{ user.get_role_display }}</span
+              <span class="nav-link"
+                ><i class="fa fa-user-circle"></i> {{ user.username }} <br />
+                {{ user.get_role_display }}</span
               >
             </li>
             <li class="nav-item">
@@ -132,7 +134,7 @@
     </div>
 
     <!-- Footer personnalisé -->
-    <footer class="text-center">
+    <footer class="text-center mt-auto py-3">
       <div class="container">
         <p>&copy; 2025 Ma Conf App - Gestion de Conférences</p>
         <p>

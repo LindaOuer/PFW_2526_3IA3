@@ -1,47 +1,73 @@
-<table border="1">
-  <tr>
-    <td>Title</td>
-    <td>Start Date</td>
-    <td>End Date</td>
-    <td>Location</td>
-    <td>Actions</td>
-  </tr>
-  {% for conf in conferences %}
+{% extends 'base.html' %}
+{% load static %}
 
-  <tr>
-    <td>{{ conf.name }}</td>
-    <td>{{ conf.start_date }}</td>
-    <td>{{ conf.end_date }}</td>
-    <td>{{ conf.location }}</td>
-    <td class="text-center">
-      <a
-        href="{% url 'conference-details' conf.conference_id %}"
-        class="btn btn-sm btn-primary me-1"
-        title="Détails"
-      >
-        <i class="fa fa-eye"></i> Détails
-      </a>
-      <a
-        href="{% url 'conference_update' conf.conference_id %}"
-        class="btn btn-sm btn-warning me-1"
-        title="Modifier"
-      >
-        <i class="fa fa-edit"></i>Modifier
-      </a>
-      <form
-        method="post"
-        action="{% url 'conference_delete' conf.conference_id %}"
-        style="display: inline"
-        onsubmit="return confirm('Supprimer cette conférence ?');"
-      >
-        {% csrf_token %}
-        <button type="submit" class="btn btn-sm btn-danger" title="Supprimer">
-          <i class="fa fa-trash"></i> Supprimer
-        </button>
-      </form>
-    </td>
-  </tr>
-  {% empty %}
-  <p>No Conferences available!</p>
-  {% endfor %}
-</table>
+{% block title %}Liste des Conférences{% endblock %}
+
+{% block content %}
+    <div class="text-center my-5">
+        <h1 class="display-5 mb-4 text-primary">
+            <i class="fa fa-calendar-alt me-2"></i> Conférences Disponibles
+        </h1>
+        <p class="lead fs-4 text-muted">Parcourez et gérez les conférences par thème et dates.</p>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-12">
+            {% if conferences %}
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th><i class="fa fa-tag"></i> Nom</th>
+                                <th><i class="fa fa-palette"></i> Thème</th>
+                                <th><i class="fa fa-map-marker"></i> Lieu</th>
+                                <th><i class="fa fa-calendar"></i> Dates</th>
+                                <th><i class="fa fa-info-circle"></i> Description</th>
+                                <th class="text-center"><i class="fa fa-cogs"></i> Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for conference in conferences %}
+                                <tr>
+                                    <td><strong>{{ conference.name }}</strong></td>
+                                    <td>
+                                        <span class="badge bg-secondary">{{ conference.get_theme_display }}</span>
+                                    </td>
+                                    <td>{{ conference.location }}</td>
+                                    <td>{{ conference.start_date|date:"d/m/Y" }} - {{ conference.end_date|date:"d/m/Y" }}</td>
+                                    <td>{{ conference.description|truncatewords:10 }}</td>
+                                    <td class="text-center">
+                                        <a href="{% url 'conference_details' conference.conference_id %}" class="btn btn-sm btn-primary me-1" title="Détails">
+                                            <i class="fa fa-eye"></i>
+                                        </a>
+                                        <a href="{% url 'conference_update' conference.conference_id %}" class="btn btn-sm btn-warning me-1" title="Modifier">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        <form method="post" action="{% url 'conference_delete' conference.conference_id %}" style="display: inline;" onsubmit="return confirm('Supprimer cette conférence ?');">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm btn-danger" title="Supprimer">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="alert alert-info text-center">
+                    <i class="fa fa-info-circle me-2"></i> Aucune conférence disponible.
+                </div>
+            {% endif %}
+
+            {% if user.is_staff %}
+                <div class="text-center mt-4">
+                    <a href="{% url 'conference_create' %}" class="btn btn-success btn-lg">
+                        <i class="fa fa-plus me-2"></i> Ajouter une Conférence
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
