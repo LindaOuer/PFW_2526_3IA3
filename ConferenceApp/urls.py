@@ -8,4 +8,7 @@ urlpatterns = [
     path('listC/', views.ConferenceListView.as_view(), name='conference-listLV'),
     path('welcome/', views.welcome, name='welcome'),
     path('details/<int:pk>/', views.ConferenceDetailsView.as_view(), name='conference-details'),
+    path("create/", views.ConferenceCreateView.as_view(), name="conference_create"),
+    path("update/<int:pk>/", views.ConferenceUpdateView.as_view(), name="conference_update"),
+    path("delete/<int:pk>/", views.ConferenceDeleteView.as_view(), name="conference_delete"),
 ]
