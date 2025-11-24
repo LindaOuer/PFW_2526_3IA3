@@ -20,9 +20,20 @@ from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from UserApp.views import RegisterView
 from django.views.generic import TemplateView
+from rest_framework.routers import DefaultRouter
+from ConferenceApp import views
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+    TokenVerifyView
+)
+
+router = DefaultRouter()
+router.register(r'conferences', views.ConferenceViewSet)
 
 
 urlpatterns = [
+    path('API/', include(router.urls)),
     path("", TemplateView.as_view(template_name="home.html"), name="home"),
     path("admin/", admin.site.urls),
     path("conference/", include("ConferenceApp.urls")),
@@ -31,4 +42,7 @@ urlpatterns = [
     ),
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
     path("register/", RegisterView.as_view(), name="inscription"),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name="token_refresh"),
+    path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify')
 ]

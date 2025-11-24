@@ -4,10 +4,33 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from .forms import ConferenceForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 
+from rest_framework import viewsets
+from .serializers import ConferenceSerializer
 # Create your views here.
+class ConferenceViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows conferences to be viewed or edited.
+    - list() -> GET /conferences/
+    - retrieve() -> GET /conferences/{id}/
+    - create() -> POST /conferences/
+    - update() -> PUT /conferences/{id}/
+    - partial_update() -> PATCH /conferences/{id}/
+    - destroy() -> DELETE /conferences/{id}/
+    """
+    queryset = Conference.objects.all()
+    serializer_class = ConferenceSerializer
+    
 
-class ConferenceCreateView(CreateView):
+
+
+
+
+
+
+
+class ConferenceCreateView(LoginRequiredMixin, CreateView):
     model = Conference
     fields = "__all__"
     template_name = 'ConferenceApp/conference_form.html'

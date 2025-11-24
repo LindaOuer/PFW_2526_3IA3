@@ -1,7 +1,14 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+router.register(r'conferences', views.ConferenceViewSet)
 
 urlpatterns = [
+    path('API/', include(router.urls)),
+    
+    
     path("home/<str:name>", views.home, name="home"),
     path("list/", views.listConferences, name="conference-list"),
     path("listC/", views.ConferenceListView.as_view(), name="conference-listLV"),
@@ -22,4 +29,5 @@ urlpatterns = [
         views.ConferenceDeleteView.as_view(),
         name="conference_delete",
     ),
+    
 ]
